@@ -1,14 +1,10 @@
-package com.utils;
+package com.hello.utils;
 
-import com.service.UserService;
-import com.service.impl.UserServiceImpl;
+import com.hello.service.UserService;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,13 +67,19 @@ public class ServiceFactory {
         String id = env.getProperty("userService.id");
         //2.创建bean，并将bean放入缓存
         UserService userService = (UserService) getBean(classPath);
-        cache.put(id,userService);
-        //3.调用bean的初始化方法
-        Method initMethod = userService.getClass().getDeclaredMethod(initMethodName);
-        //可以使用setAccessible将私有的方法设置为可访问
-        if (! initMethod.isAccessible()) {
-            initMethod.setAccessible(true);
+
+        if(userService instanceof InitializingBean){
+            InitializingBean init = (InitializingBean) userService;
+            init.afterPropertiesSet();
         }
-        initMethod.invoke(userService);
+
+
+//        //3.调用bean的初始化方法
+//        Method initMethod = userService.getClass().getDeclaredMethod(initMethodName);
+//        //可以使用setAccessible将私有的方法设置为可访问
+//        if (! initMethod.isAccessible()) {
+//            initMethod.setAccessible(true);
+//        }
+//        initMethod.invoke(userService);
     }
 }

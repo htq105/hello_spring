@@ -1,20 +1,14 @@
 package com.bjpowernode;
 
-import com.controller.UserController;
-import com.service.SomeService;
-import com.service.UserService;
-import com.service.impl.SomeServiceImpl;
-import com.service.impl.UserServiceImpl;
+
+import com.hello.service.UserService;
+import com.hello.utils.BeanFactory;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
+
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MyTest {
 
@@ -66,16 +60,11 @@ public class MyTest {
 
     //获取一个非自定义的类对象
     @Test
-    public void test04() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-//        ApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
-        String methodName = "init";
-        Class clazz = UserServiceImpl.class;
-        UserService userService = (UserService) clazz.newInstance();
-        Method initMethod = clazz.getDeclaredMethod("init");
-        if (! initMethod.isAccessible()) {
-            initMethod.setAccessible(true);
-        }
-        initMethod.invoke(userService);
-//        System.out.println(Arrays.toString(ac.getBeanDefinitionNames()));
+    public void test04() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, InterruptedException {
+        AbstractApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
+        UserService userService = ac.getBean("userServiceImpl", UserService.class);
+        userService.register("张三");
     }
+
+
 }

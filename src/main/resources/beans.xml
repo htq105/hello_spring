@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+<!--    <context:component-scan base-package="com.hello"></context:component-scan>-->
+
+    <context:load-time-weaver/>
+
+    <task:annotation-driven executor="defaultTaskExecutor" scheduler="defaultTaskScheduler" />
+    <task:executor id="defaultTaskExecutor" pool-size="5" queue-capacity="100"/>
+    <task:scheduler id="defaultTaskScheduler" pool-size="1" />
 
     <!--告诉spring创建对象
         声明bean ， 就是告诉spring要创建某个类的对象
@@ -16,12 +26,15 @@
 
         一个bean标签声明一个对象。
     -->
-<!--    <bean id="someService" class="com.service.impl.SomeServiceImpl" />-->
+    <bean id="father" abstract="true" scope="prototype" init-method="init">
+        <property name="name" value="service"></property>
+    </bean>
 
-<!--    <bean id="someService1" class="com.service.impl.SomeServiceImpl" scope="prototype"/>-->
+    <bean id="userServiceImpl" class="com.hello.service.impl.UserServiceImpl" parent="father"/>
 
     <!--方式一-->
-    <bean id="userService" class = "com.service.impl.UserServiceImpl" scope="singleton" init-method="init"/>
+
+<!--    <bean id="lifecycleProcessor" class = "com.hello.utils.Process"/>-->
 
     <!--
        spring能创建一个非自定义类的对象吗， 创建一个存在的某个类的对象。

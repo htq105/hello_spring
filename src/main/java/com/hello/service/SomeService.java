@@ -1,4 +1,4 @@
-package com.service;
+package com.hello.service;
 
 public interface SomeService {
     void doSome();
